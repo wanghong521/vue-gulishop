@@ -3,6 +3,7 @@
 // 在这个文件当中我们把每个接口发请求都封装一个函数,以后哪里需要接口的数据,就调用相关的那个接口请求函数就好了
 
 import Ajax from '@/ajax/Ajax'
+import mockAjax from '@/ajax/mockAjax'
 // /api/product/getBaseCategoryList
 // 请求方式  get
 // 参数  无
@@ -10,6 +11,20 @@ import Ajax from '@/ajax/Ajax'
 export const reqCategoryList = ()=>{
     return Ajax({
         url:'/product/getBaseCategoryList',
+        method:'GET'
+    })
+}
+
+export const reqBannerList = ()=>{
+    return mockAjax({
+        url:'/banner',
+        method:'GET'
+    })
+}
+
+export const reqFloorList = ()=>{
+    return mockAjax({
+        url:'/floor',
         method:'GET'
     })
 }
