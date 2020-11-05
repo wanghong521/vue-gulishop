@@ -29,7 +29,7 @@
     <!--头部第二行 搜索区域-->
     <div class="bottom">
       <h1 class="logoArea">
-        <router-link to="/search" class="logo" title="尚品汇">
+        <router-link to="/home" class="logo" title="尚品汇">
           <img src="./images/logo.png" alt="" />
         </router-link>
         <!-- <a class="logo" title="尚品汇" href="###" target="_blank">
@@ -65,6 +65,9 @@ export default {
       keyword: "",
     };
   },
+  mounted() {
+    this.$bus.$on("clearKeyword", this.clearKeyword);
+  },
   methods: {
     toSearch() {
       // 1、路由传参的写法   字符串拼接（+）   模板字符串     对象（name）
@@ -87,7 +90,11 @@ export default {
         location.query = this.$route.query;
       }
 
-      this.$router.push(location);
+      if (this.$route.path !== "/home") {
+        this.$router.replace(location); //从search跳转search用replace不保留历史记录
+      } else {
+        this.$router.push(location); //从home跳转search用push保留历史记录
+      }
 
       // 3、能不能不用name,用path和params参数配合去写
       // 答：不能
@@ -114,6 +121,9 @@ export default {
       // 6、 props 为了简化 组件当中使用路由参数的写法
       // 可以: 可以将query或且params参数映射/转换成props传递给路由组件对象
       // 实现: props: (route)=>({keyword:route.params.keyword, keyword1: route.query.keyword })
+    },
+    clearKeyword() {
+      this.keyword = "";
     },
   },
 };

@@ -96,7 +96,7 @@ export default {
     //   this.currentIndex = index;
     // },
     moveIn: throttle(
-      function (index) {
+      function(index) {
         this.currentIndex = index;
       },
       50,
@@ -138,7 +138,12 @@ export default {
         if (this.$route.params) {
           location.params = this.$route.params;
         }
-        this.$router.push(location);
+
+        if (this.$route.path !== "/home") {
+          this.$router.replace(location); //从search跳转search用replace不保留历史记录
+        } else {
+          this.$router.push(location); //从home跳转search用push保留历史记录
+        }
       }
     },
   },

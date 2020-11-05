@@ -10,9 +10,14 @@ Vue.config.productionTip = false
 
 import TypeNav from '@/components/TypeNav'
 import SliderLoop from '@/components/SliderLoop'
+import Pagination from '@/components/Pagination'
 Vue.component('TypeNav',TypeNav)
 Vue.component('SliderLoop',SliderLoop)
+Vue.component('Pagination',Pagination)
 new Vue({
+  beforeCreate() {
+    Vue.prototype.$bus = this
+  },
   render: h => h(App),
   router,
   store

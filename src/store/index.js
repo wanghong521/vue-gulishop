@@ -10,6 +10,7 @@ const getters = {}
 
 import home from'./home'
 import users from './users'
+import search from './search'
 export default new Vuex.Store({
     state,
     mutations,
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     //合并每个模块小的store到大的store  使用这个核心概念
     modules:{
         home,
-        users
+        users,
+        search
     }
 })
