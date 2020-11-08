@@ -74,3 +74,27 @@ export const reqAddOrUpdateShopCart = (skuId,skuNum)=>{
     method:'post'
   })
 }
+
+// 请求购物车列表数据/api/cart/cartList
+export const reqShopCartList = ()=>{
+  return Ajax({
+    url:'/cart/cartList',
+    method:'GET'
+  })
+}
+
+// 请求修改购物车选中状态/api/cart/checkCart/{skuID}/{isChecked}
+export const reqUpdateCartIsCheck = (skuId,isChecked)=>{
+  return Ajax({
+    url:`/cart/checkCart/${skuId}/${isChecked}`,
+    method:'get'
+  })
+}
+
+// 删除购物车信息单个  /api/cart/deleteCart/{skuId}
+export const reqDeleteCart = (skuId)=>{
+  return Ajax({
+    url:`/cart/deleteCart/${skuId}`,
+    method:'delete'
+  })
+}

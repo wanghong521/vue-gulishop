@@ -389,6 +389,8 @@ export default {
     getGoodsDetailInfo() {
       this.$store.dispatch("getGoodsDetailInfo", this.skuId);
     },
+
+    // 排他
     changeCheck(saleAttrValue, saleAttrValueList) {
       // 排他
       // 第一步让所有的属性值都变为同一种状态
