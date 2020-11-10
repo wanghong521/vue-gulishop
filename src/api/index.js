@@ -3,6 +3,7 @@
 //在这个文件当中我们把每个接口发请求都封装一个函数，以后哪里需要接口的数据，就调用相关的那个接口请求函数就好了
 import Ajax from '@/ajax/Ajax'
 import mockAjax from '@/ajax/mockAjax'
+import trade from '@/store/trade'
 // /api/product/getBaseCategoryList
 // 请求方式  get
 // 参数  无
@@ -96,5 +97,84 @@ export const reqDeleteCart = (skuId)=>{
   return Ajax({
     url:`/cart/deleteCart/${skuId}`,
     method:'delete'
+  })
+}
+
+// 请求注册/api/user/passport/register 参数名称code password phone
+export const reqUserRegister = (userInfo)=>{
+  return Ajax({
+    url:'/user/passport/register',
+    method:'post',
+    data:userInfo
+  })
+}
+
+//请求登录  /api/user/passport/login  参数名称 phone password
+export const reqUserLogin = (userInfo)=>{
+  return Ajax({
+    url:'/user/passport/login',
+    method:'post',
+    data:userInfo
+  })
+}
+
+// 退出登录 /api/user/passport/logout
+export const reqUserLogout = ()=>{
+  return Ajax({
+    url:'/user/passport/logout',
+    method:'get'
+  })
+}
+
+// 请求获取订单交易信息  // /api/order/auth/trade   get
+export const reqTradeInfo = ()=>{
+  return Ajax({
+    url:'/order/auth/trade',
+    method:'get'
+  })
+}
+
+// 请求创建订单（点击提交按钮就会）/api/order/auth/submitOrder?tradeNo={tradeNo} post
+ // 参数  交易编号是query  其余是请求体data
+ export const reqSubmitOrder =(tradeNo,tradeInfo)=>{
+   return Ajax({
+     url:`/order/auth/submitOrder`,
+     method:'post',
+     params:{
+       tradeNo
+     },
+     data:tradeInfo
+   })
+ }
+
+ 
+// /api/payment/weixin/createNative/{orderId}
+// get
+export const reqOrderInfo = (orderId)=>{
+  return Ajax({
+    url:`/payment/weixin/createNative/${orderId}`,
+    method:'get'
+  })
+}
+
+// 请求查询订单的支付状态
+///api/payment/weixin/queryPayStatus/{orderId}
+// get
+export const reqPayStatus = (orderId)=>{
+  return Ajax({
+    url:`/payment/weixin/queryPayStatus/${orderId}`,
+    method:'get'
+  })
+}
+
+
+//请求获取我的订单数据
+///api/order/auth/{page}/{limit}
+//get
+
+export const reqMyOrderInfo = (page,limit) => {
+  return Ajax({
+    url:`/order/auth/${page}/${limit}`,
+    method:'get'
   })
 }

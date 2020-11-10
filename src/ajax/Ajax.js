@@ -17,11 +17,17 @@ instance.interceptors.request.use((config)=>{
     // 请求拦截器回调函数，接受一个参数，叫config，本质就是我们的请求报文
     // 在请求拦截器当中开启进度条（添加功能）nprogress
    
-//    每次请求都在请求头当中添加用户临时标识
-        let userTempId = store.state.users.userTempId
-        if(userTempId){
-            config.headers.userTempId = userTempId
-        }
+  //每次请求都在请求头当中添加用户临时标识
+  let userTempId = store.state.users.userTempId
+  if(userTempId){
+    config.headers.userTempId = userTempId
+  }
+
+  //每次请求带上用户的登录标识
+  let token = store.state.users.userInfo.token
+  if(token){
+    config.headers.token = token
+  }
 
         Nprogress.start()
         return config

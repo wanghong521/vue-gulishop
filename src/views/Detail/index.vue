@@ -23,12 +23,8 @@
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
           <div class="goodsDetail">
-            <h3 class="InfoName">
-              {{ skuInfo.skuName }}
-            </h3>
-            <p class="news">
-              {{ skuInfo.skuDesc }}
-            </p>
+            <h3 class="InfoName">{{ skuInfo.skuName }}</h3>
+            <p class="news">{{ skuInfo.skuDesc }}</p>
             <div class="priceArea">
               <div class="priceArea1">
                 <div class="title">
@@ -285,9 +281,7 @@
             </ul>
             <div class="result">
               <div class="num">已选购0件商品</div>
-              <div class="price-tit">
-                套餐价
-              </div>
+              <div class="price-tit">套餐价</div>
               <div class="price">￥5299</div>
               <button class="addshopcar">加入购物车</button>
             </div>
@@ -296,29 +290,19 @@
         <div class="intro">
           <ul class="tab-wraped">
             <li class="active">
-              <a href="###">
-                商品介绍
-              </a>
+              <a href="###"> 商品介绍 </a>
             </li>
             <li>
-              <a href="###">
-                规格与包装
-              </a>
+              <a href="###"> 规格与包装 </a>
             </li>
             <li>
-              <a href="###">
-                售后保障
-              </a>
+              <a href="###"> 售后保障 </a>
             </li>
             <li>
-              <a href="###">
-                商品评价
-              </a>
+              <a href="###"> 商品评价 </a>
             </li>
             <li>
-              <a href="###">
-                手机社区
-              </a>
+              <a href="###"> 手机社区 </a>
             </li>
           </ul>
           <div class="tab-content">
@@ -378,32 +362,31 @@ export default {
     };
   },
   beforeMount() {
-    // 同步更新数据
+    //同步更新数据
     this.skuId = this.$route.params.skuId;
   },
   mounted() {
+    //异步发送请求
     this.getGoodsDetailInfo();
   },
-
   methods: {
     getGoodsDetailInfo() {
       this.$store.dispatch("getGoodsDetailInfo", this.skuId);
     },
 
-    // 排他
     changeCheck(saleAttrValue, saleAttrValueList) {
-      // 排他
-      // 第一步让所有的属性值都变为同一种状态
+      //排它
+      //第一步让所有的属性值都变为同一种状态
       saleAttrValueList.forEach((item) => (item.isChecked = "0"));
-      // 第二步让当前点击的这个属性值变为另外一种状态
+      //第二步让当前点击的这个属性值变为另外一种状态
       saleAttrValue.isChecked = "1";
     },
-    // 点击添加购物车
+    //点击添加购物车
     async addCart() {
-      // 首先发个请求，告诉后台我要添加购物车，吧请求所需要的参数带上
-      // 然后后台会添加好购物车数据之后返回响应
-      // 如果响应成功，再跳转到添加购物车成功页面
-      // 如果不成功，那么就呆在原地
+      //先要发个请求，告诉后台我要添加购物车，把请求所需要的参数带上
+      //然后后台会添加好购物车数据之后返回响应
+      //如果响应成功，再跳转到添加购物车成功页面
+      //如果不成功，那么就呆再原地
       let { skuId, skuNum } = this;
       try {
         const result = await this.$store.dispatch("addOrUpdateShopCart", {
@@ -411,10 +394,11 @@ export default {
           skuNum,
         });
         if (result === "ok") {
-          // 成功之后，我们在去跳转到添加成功页面
+          //成功之后，我们再去跳转到添加成功页面
           alert("添加购物车成功，自动跳转到成功页面");
-          // 跳转之前把添加购物车成功页面所需要的数据传递过去或者存储
+          //跳转之前把添加购物车成功页面所需要的数据传递过去或者存储
           sessionStorage.setItem("SKUINFO_KEY", JSON.stringify(this.skuInfo));
+
           this.$router.push("/addcartsuccess?skuNum=" + skuNum);
         } else {
           alert("添加购物车失败");

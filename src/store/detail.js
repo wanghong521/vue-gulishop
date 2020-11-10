@@ -1,36 +1,35 @@
-import { reqGoodsDetailInfo } from "@/api";
+import {reqGoodsDetailInfo} from '@/api'
 const state = {
-  goodsDetailInfo: {},
-};
-
+  goodsDetailInfo:{}
+}
 const mutations = {
-  RECEIVEGOODSDETAILINFO(state, goodsDetailInfo) {
-    state.goodsDetailInfo = goodsDetailInfo;
-  },
-};
+  RECEIVEGOODSDETAILINFO(state,goodsDetailInfo){
+    state.goodsDetailInfo = goodsDetailInfo
+  }
+}
 const actions = {
-  async getGoodsDetailInfo({ commit }, skuId) {
-    const result = await reqGoodsDetailInfo(skuId);
-    if (result.code === 200) {
-      commit("RECEIVEGOODSDETAILINFO", result.data);
+  async getGoodsDetailInfo({commit},skuId){
+    const result = await reqGoodsDetailInfo(skuId)
+    if(result.code === 200){
+      commit('RECEIVEGOODSDETAILINFO',result.data)
     }
-  },
-};
+  }
+}
 const getters = {
-  categoryView(state) {
-    return state.goodsDetailInfo.categoryView || {};
+  categoryView(state){
+    return state.goodsDetailInfo.categoryView || {}
   },
-  skuInfo(state) {
-    return state.goodsDetailInfo.skuInfo || {};
+  skuInfo(state){
+    return state.goodsDetailInfo.skuInfo || {}
   },
-  spuSaleAttrList(state) {
-    return state.goodsDetailInfo.spuSaleAttrList || [];
-  },
-};
+  spuSaleAttrList(state){
+    return state.goodsDetailInfo.spuSaleAttrList || []
+  }
+}
 
 export default {
   state,
   mutations,
   actions,
-  getters,
-};
+  getters
+}

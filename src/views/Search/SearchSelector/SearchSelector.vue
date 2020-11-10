@@ -39,6 +39,12 @@
 </template>
 
 <script>
+// let goodsListInfo = {
+//   attrsList: [{ attrId: 1, attrName: "内存", attrValueList: [] }],
+//   goodsList: [{}, {}],
+//   trademarkList: [],
+// };
+
 import { mapGetters } from "vuex";
 export default {
   name: "SearchSelector",

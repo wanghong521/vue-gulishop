@@ -6,20 +6,25 @@
         <!--bread-->
         <div class="bread">
           <ul class="fl sui-breadcrumb">
-            <li><a href="#">全部结果</a></li>
+            <li>
+              <a href="#">全部结果</a>
+            </li>
           </ul>
           <ul class="fl sui-tag">
             <li class="with-x" v-if="searchParams.categoryName">
               {{ searchParams.categoryName
               }}<i @click="removeCategoryName">×</i>
             </li>
+
             <li class="with-x" v-if="searchParams.keyword">
               {{ searchParams.keyword }}<i @click="removeKeyword">×</i>
             </li>
+
             <li class="with-x" v-if="searchParams.trademark">
               {{ searchParams.trademark.split(":")[1]
               }}<i @click="removeTrademark">×</i>
             </li>
+
             <li
               class="with-x"
               v-for="(prop, index) in searchParams.props"
@@ -42,46 +47,41 @@
             <div class="navbar-inner filter">
               <ul class="sui-nav">
                 <!-- 排序的种类：4种
-                1. 页面的背景色
-                  如果排序规则是1  那么综合有背景色
-                  如果排序规则是2  那么价格有背景色
-                2. 排序的类型图标
-                  使用什么字体图标
-                  谁有箭头
-                  箭头的方向是啥 -->
+                  1、页面的背景色
+                    如果排序规则是1 那么综合有背景色
+                    如果排序规则是2 那么价格有背景色
+                    强制绑定类 对象做法
+                  2、排序的类型图标
+                    使用什么字体图标
+                    谁有箭头
+                    箭头的方向是啥
 
+                -->
                 <li :class="{ active: sortFlag === '1' }">
-                  <a href="javascript:;" @click="sortGoods('1')"
-                    >综合<i
+                  <a href="javascript:;" @click="sortGoods('1')">
+                    综合
+                    <i
                       v-if="sortFlag === '1'"
                       class="iconfont"
                       :class="{
                         icondown: sortType === 'desc',
                         iconup: sortType === 'asc',
                       }"
-                    ></i
-                  ></a>
-                </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
+                    ></i>
+                  </a>
                 </li>
                 <li :class="{ active: sortFlag === '2' }">
-                  <a href="javascript:;" @click="sortGoods('2')"
-                    >价格<i
+                  <a href="javascript:;" @click="sortGoods('2')">
+                    价格
+                    <i
                       v-if="sortFlag === '2'"
                       class="iconfont"
                       :class="{
                         icondown: sortType === 'desc',
                         iconup: sortType === 'asc',
                       }"
-                    ></i
-                  ></a>
+                    ></i>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -115,9 +115,9 @@
                       title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】"
                       >{{ goods.title }}</a
                     > -->
-                    <router-link :to="'/detail/' + goods.id">{{
-                      goods.title
-                    }}</router-link>
+                    <router-link :to="'/detail/' + goods.id">
+                      {{ goods.title }}
+                    </router-link>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>
@@ -137,12 +137,15 @@
               </li>
             </ul>
           </div>
+
           <!-- 分页器要做的事情
-              1. 显示总的页码
-              2.显示当前页码
-              3.显示总条数
-              前面三点吗需要从父组件给子组件传递三个数据 当前页 总条数 每页的数量
-              4. 连续页数也是由父组件传递给子组件，一般都是奇数 -->
+            1、显示当前页码
+            2、显示总的页码
+            3、显示总条数
+            前面三点需要从父组件给子组件传递三个数据 当前页  总条数  每页的数量
+            4、连续页数 
+            连续页数也是由父组件传递给子组件，一般都是奇数
+          -->
           <Pagination
             :currentPageNum="searchParams.pageNo"
             :pageSize="searchParams.pageSize"
@@ -161,6 +164,32 @@ import { mapGetters, mapState } from "vuex";
 import SearchSelector from "./SearchSelector/SearchSelector";
 export default {
   name: "Search",
+  beforeMount() {
+    //同步更新数据的时候
+    // let {
+    //   categoryName,
+    //   category1Id,
+    //   category2Id,
+    //   category3Id,
+    // } = this.$route.query;
+    // let { keyword } = this.$route.params;
+
+    // let searchParams = {
+    //   ...this.searchParams,
+    //   categoryName,
+    //   category1Id,
+    //   category2Id,
+    //   category3Id,
+    //   keyword,
+    // };
+
+    // this.searchParams = searchParams;
+    this.handlerParams();
+  },
+  mounted() {
+    this.getGoodsListInfo();
+  },
+
   data() {
     return {
       //是我们用户默认搜索的参数,初始化参数
@@ -172,8 +201,8 @@ export default {
         category3Id: "",
         categoryName: "",
         keyword: "",
-        order: "1:asc", //决定了排序的标志（1代表综合2代表价格）和排序的类型（asc升序desc降序）
-        pageNo: 4,
+        order: "1:desc", //决定了排序的标志（1代表综合2代表价格）和排序的类型（asc升序desc降序）
+        pageNo: 1,
         pageSize: 2,
         props: [],
         trademark: "",
@@ -181,40 +210,13 @@ export default {
     };
   },
 
-  beforeMount() {
-    // 同步更新数据的时候
-    // let{
-    //   categoryName,
-    //   category1Id,
-    //   category2Id,
-    //   category3Id
-    // } = this.$route.query
-    // let {keyword} = this.$route.params
-    // let searchParams = {
-    //   ...this.searchParams,
-    //   categoryName,
-    //   category1Id,
-    //   category2Id,
-    //   category3Id,
-    //   keyword
-    // }
-    // this.searchParams = searchParams
-    this.handlerParams();
-  },
-
-  components: {
-    SearchSelector,
-  },
-  mounted() {
-    this.getGoodsListInfo();
-  },
   methods: {
-    // 请求获取商品列表信息数据
+    //请求获取商品列表信息数据
     getGoodsListInfo() {
       this.$store.dispatch("getGoodsListInfo", this.searchParams);
     },
 
-    // 处理请求参数
+    //处理请求参数
     handlerParams() {
       let {
         categoryName,
@@ -222,7 +224,6 @@ export default {
         category2Id,
         category3Id,
       } = this.$route.query;
-
       let { keyword } = this.$route.params;
 
       let searchParams = {
@@ -234,7 +235,7 @@ export default {
         keyword,
       };
 
-      // 把最终参数当中是空串的属性去掉，因为没必要还占宽带
+      //把最终参数当中是空串的属性去掉，因为没必要还占带宽
       Object.keys(searchParams).forEach((item) => {
         if (searchParams[item] === "") {
           delete searchParams[item];
@@ -242,109 +243,104 @@ export default {
       });
 
       searchParams.pageNo = 1;
+
       this.searchParams = searchParams;
     },
 
-    // 删除面包屑的类名
+    //删除面包屑的类名
     removeCategoryName() {
       this.searchParams.pageNo = 1;
       // this.searchParams.categoryName = undefined
       delete this.searchParams.categoryName;
-      // this.getGoodsListInfo()发请求 直接dispa去发请求，不会去更改之前的路径，因此我们要手动的去修改路径并且发请求
-      // this.getGoodesListInfo()
+
+      // this.getGoodsListInfo();发请求 直接dispatch去发请求，不会去更改之前的路径，因此我们要手动的去修改路径并且发请求
+      // this.getGoodsListInfo();
 
       let location = { name: "search", params: this.$route.params };
-      this.$router.replace(location);
 
-      // push本身是用来跳转路由 不会发请求 而dispatch是发请求的，本身并不能改变路由
+      // this.$router.push(location);
+      this.$router.replace(location); //搜索页往搜索页跳转不需要保留历史记录
+      //push本身是用来跳转路由 不会发请求 而 dispatch是发请求的，本身并不能改变路由
       // 我们先通过push跳转路由改变路径 然后下面的watch就会监视到路由对象的变化，然后在监视当中我们通过dispatch发的请求
     },
 
-    // 删除面包屑的关键字
+    //删除面包屑的关键字
     removeKeyword() {
       this.searchParams.pageNo = 1;
-      // this.searchParams.categoryName = undefined
       delete this.searchParams.keyword;
-      // this.getGoodsListInfo()发请求 直接dispa去发请求，不会去更改之前的路径，因此我们要手动的去修改路径并且发请求
-      // this.getGoodesListInfo()
-      this.$bus.$emit("clearKeyword");
-      let location = { name: "search", params: this.$route.query };
-      this.$router.replace(location);
+      // this.getGoodsListInfo();发请求 直接dispatch去发请求，不会去更改之前的路径，因此我们要手动的去修改路径并且发请求
+      // this.getGoodsListInfo();
 
-      // push本身是用来跳转路由 不会发请求 而dispatch是发请求的，本身并不能改变路由
-      // 我们先通过push跳转路由改变路径 然后下面的watch就会监视到路由对象的变化，然后在监视当中我们通过dispatch发的请求
+      this.$bus.$emit("clearKeyword");
+
+      let location = { name: "search", query: this.$route.query };
+
+      this.$router.replace(location); //搜索页往搜索页跳转不需要保留历史记录
     },
 
-    // 根据品牌搜索
+    //根据品牌搜索
     searchForTrademark(trademark) {
       this.searchParams.pageNo = 1;
-      // 获取到子组件传递过来的trademark对象，拼接成参数所需要的格式
+      //获取到子组件传递过来的trademark对象，拼接成参数所需要的格式
       let trademarkInfo = `${trademark.tmId}:${trademark.tmName}`;
-
-      // 修改搜索参数发请求
+      //修改搜索参数发请求
       this.searchParams.trademark = trademarkInfo;
       this.getGoodsListInfo();
     },
-
-    // 删除面包屑的品牌
+    //删除面包屑的品牌
     removeTrademark() {
       this.searchParams.pageNo = 1;
       this.searchParams.trademark = undefined;
       this.getGoodsListInfo();
     },
-
-    // 根据属性搜索
+    //根据属性搜索
     searchForAttrs(attr, attrValue) {
       this.searchParams.pageNo = 1;
       let prop = `${attr.attrId}:${attrValue}:${attr.attrName}`;
 
       //some every
-      // some是用来判断数组当中是否有一个和条件一样的，如果有一个一样就是true，如果都不一样才是false
-      //every是用来判断数组当中是否全部都和条件一样，如果是全部一样才是true，如果有一个不一样及时false
+      //some是用来判断数组当中是否有一个和条件一样的，如果有一个一样就是true,如果都不一样才是false
+      //every是用来判断数组当中是否全部都和条件一样，如果是全部一样才是true,如果有一个不一样就是false
       let isRepeat = this.searchParams.props.some((item) => item === prop);
       if (isRepeat) return;
 
       this.searchParams.props.push(prop);
       this.getGoodsListInfo();
     },
-
-    // 删除面包屑的属性
+    //删除面包屑的属性
     removeProp(index) {
       this.searchParams.pageNo = 1;
       this.searchParams.props.splice(index, 1);
       this.getGoodsListInfo();
     },
-
-    // 排序商品 按照综合价格
+    //排序商品 按照综合价格
     sortGoods(sortFlag) {
-      // 获取原来的排序规则（排序标准排序类型）
+      //获取原来的排序规则（排序标志排序类型）
+      // let originSortFlag = this.searchParams.order.split(':')[0]
       let originSortFlag = this.sortFlag;
       let originSortType = this.sortType;
-      let newOrder = "";
 
+      let newOrder = "";
       // 判断点击传递过来的标志是否和原来的排序标志一样
       if (sortFlag === originSortFlag) {
-        // 原来的排序标志和新点击的一样，我们只需要改变排序类型就好
+        //原来的排序标志和新点击的一样，我们只需要改变排序类型就好
         newOrder = `${originSortFlag}:${
           originSortType === "desc" ? "asc" : "desc"
         }`;
       } else {
-        // 原来的排序标志和新点击的不一样，我们需要改变排序标志，排序类型默认给一个
+        //原来的排序标志和新点击的不一样，我们需要改变排序标志，排序类型默认给一个
         newOrder = `${sortFlag}:desc`;
       }
-
       this.searchParams.pageNo = 1;
-
       this.searchParams.order = newOrder;
       this.getGoodsListInfo();
     },
-    // 点击分页器的按钮改变
+    //点击分页器的按钮改变页码
     changeNum(page) {
       this.searchParams.pageNo = page;
       this.getGoodsListInfo();
     },
   },
-
   computed: {
     ...mapGetters(["goodsList"]),
     ...mapState({
@@ -357,6 +353,7 @@ export default {
       return this.searchParams.order.split(":")[1];
     },
   },
+
   watch: {
     $route: {
       handler() {
@@ -364,6 +361,10 @@ export default {
         this.getGoodsListInfo();
       },
     },
+  },
+
+  components: {
+    SearchSelector,
   },
 };
 </script>
