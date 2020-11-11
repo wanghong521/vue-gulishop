@@ -96,7 +96,8 @@ export default {
           });
           if (result === "ok") {
             alert("登录成功");
-            this.$router.push("/");
+            let redirect = this.$route.query.redirect;
+            this.$router.push(redirect || "/");
           }
         } catch (error) {
           alert("登录失败");

@@ -87,6 +87,10 @@ export default {
         float: left;
         width: 16.67%;
 
+        .router-link-active {
+          color: hotpink;
+        }
+
         dl {
           line-height: 28px;
 

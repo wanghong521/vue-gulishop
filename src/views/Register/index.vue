@@ -7,42 +7,92 @@
         <span class="go"
           >我有账号，去
           <router-link to="/login">登录</router-link>
-          <!-- <a href="login.html" target="_blank">登陆</a> -->
+          <!-- <a href="login.html" target="_blank">登录</a> -->
         </span>
       </h3>
       <div class="content">
         <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" v-model="phone" />
-        <span class="error-msg">错误提示信息</span>
+
+        <input
+          v-model="phone"
+          name="phone"
+          v-validate="{ required: true, regex: /^1\d{10}$/ }"
+          :class="{ invalid: errors.has('phone') }"
+        />
+        <span class="error-msg">{{ errors.first("phone") }}</span>
+
+        <!-- <input type="text" placeholder="请输入你的手机号" v-model="phone" />
+        <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="content">
         <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" v-model="code" />
+
+        <input
+          v-model="code"
+          name="code"
+          v-validate="{ required: true, regex: /^\d{4}$/ }"
+          :class="{ invalid: errors.has('code') }"
+        />
+
         <img
           ref="code"
           src="http://182.92.128.115/api/user/passport/code"
           alt="code"
         />
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">{{ errors.first("code") }}</span>
+
+        <!-- <input type="text" placeholder="请输入验证码" v-model="code" />
+        <img
+          ref="code"
+          src="http://182.92.128.115/api/user/passport/code"
+          alt="code"
+        />
+        <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="content">
         <label>登录密码:</label>
         <input
+          v-model="password"
+          name="password"
+          v-validate="{ required: true, regex: /^\w{6,20}$/ }"
+          :class="{ invalid: errors.has('password') }"
+        />
+        <span class="error-msg">{{ errors.first("password") }}</span>
+
+        <!-- <input
           type="text"
           placeholder="请输入你的登录密码"
           v-model="password"
         />
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="content">
         <label>确认密码:</label>
-        <input type="text" placeholder="请输入确认密码" v-model="password2" />
-        <span class="error-msg">错误提示信息</span>
+        <input
+          v-model="password2"
+          name="password2"
+          v-validate="{ required: true, is: password }"
+          :class="{ invalid: errors.has('password2') }"
+        />
+        <span class="error-msg">{{ errors.first("password2") }}</span>
+
+        <!-- <input type="text" placeholder="请输入确认密码" v-model="password2" />
+        <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="controls">
-        <input name="m1" type="checkbox" />
+        <input
+          type="checkbox"
+          v-model="isCheck"
+          name="isCheck"
+          v-validate="{ agree: true }"
+          :class="{ invalid: errors.has('isCheck') }"
+        />
         <span>同意协议并注册《尚品汇用户协议》</span>
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">{{ errors.first("isCheck") }}</span>
+
+        <!-- <input name="m1" type="checkbox" />
+        <span>同意协议并注册《尚品汇用户协议》</span>
+        <span class="error-msg">错误提示信息</span> -->
       </div>
       <div class="btn">
         <button @click="register">完成注册</button>
@@ -76,28 +126,28 @@ export default {
       code: "",
       password: "",
       password2: "",
+      isCheck: false,
     };
   },
   methods: {
     async register() {
-      let { phone, code, password, password2 } = this;
-      if (phone && code && password && password2 && password2 === password) {
-        try {
-          const result = await this.$store.dispatch("userRegister", {
-            phone,
-            code,
-            password,
-          });
-          if (result === "ok") {
-            //  请求注册成功
-            alert("注册成功");
-            this.$router.push("/login");
-          } else {
-            alert("注册失败");
-          }
-        } catch (error) {
+      try {
+        const success = await this.$validator.validateAll();
+        let { phone, code, password, password2 } = this;
+        const result = await this.$store.dispatch("userRegister", {
+          phone,
+          code,
+          password,
+        });
+        if (result === "ok") {
+          //请求注册成功
+          alert("注册成功");
+          this.$router.push("/login");
+        } else {
           alert("注册失败");
         }
+      } catch (error) {
+        alert("注册失败");
       }
     },
   },

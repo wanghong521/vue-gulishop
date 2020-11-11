@@ -29,14 +29,30 @@ VueRouter.prototype.replace = function(location,resolved,rejected){
 
 
 import routes from './routes'
+import store from '@/store'
 
-
-export default new VueRouter({
+const router =  new VueRouter({
   mode:'history',
   routes,
   // 切换路由的时候保证跳转到的页面滚动位置在最上方
-  scrollBehavior(to,from,savedposition){
+  scrollBehavior(to,from,savedPosition){
     return{x:0,y:0}
   }
 })
 
+// 全局路由守卫
+router.beforeEach((to, from, next) => {
+  let targetPath = to.path
+  if(targetPath.indexOf('/pay') === 0 || targetPath.startsWith('/trade') || targetPath.startsWith('/center')){
+    if(store.state.users.userInfo.name){
+      next()
+    }else{
+      alert('请先登录')
+      next('/login?redirect='+targetPath)
+    }
+  }else{
+    next()
+  }
+})
+
+export default router

@@ -43,7 +43,7 @@
         >
           <li>
             <img
-              :src="goods.imgUrl"
+              v-lazy="goods.imgUrl"
               alt=""
               style="width: 100px; height: 80px"
             />
