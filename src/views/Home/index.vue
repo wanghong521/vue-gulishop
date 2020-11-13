@@ -3,6 +3,10 @@
     <TypeNav></TypeNav>
     <ListContainer></ListContainer>
     <Recommend></Recommend>
+    <Rank></Rank>
+
+    <Like></Like>
+    <Brand></Brand>
     <Floor
       v-for="(floor, index) in floorList"
       :key="floor.id"
@@ -15,13 +19,19 @@
 import Recommend from "./Recommend";
 import ListContainer from "./ListContainer";
 import Floor from "./Floor";
+import Like from "./Like";
+import Brand from "./Brand";
+import Rank from "./Rank";
 import { mapState } from "vuex";
 export default {
   name: "Home",
   components: {
-    Recommend,
     ListContainer,
+    Recommend,
+    Rank,
+    Like,
     Floor,
+    Brand,
   },
   mounted() {
     this.getFloorList();
@@ -39,5 +49,4 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

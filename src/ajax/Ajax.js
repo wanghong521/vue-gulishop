@@ -24,7 +24,8 @@ instance.interceptors.request.use((config)=>{
   }
 
   //每次请求带上用户的登录标识
-  let token = store.state.users.userInfo.token
+  // let token = store.state.users.userInfo.token
+  let token = store.state.users.token
   if(token){
     config.headers.token = token
   }

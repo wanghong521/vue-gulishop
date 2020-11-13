@@ -90,7 +90,7 @@ export default {
       let { phone, password } = this;
       if (phone && password) {
         try {
-          const result = await this.$store.dispatch("reqUserLogin", {
+          const result = await this.$store.dispatch("userLogin", {
             phone,
             password,
           });

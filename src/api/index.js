@@ -178,3 +178,14 @@ export const reqMyOrderInfo = (page,limit) => {
     method:'get'
   })
 }
+
+
+// 根据token获取真正的用户信息
+// /api/user/passport/auth/getUserInfo   get
+
+export const reqTokenGetUserInfo = ()=>{
+  return Ajax({
+    url:'/user/passport/auth/getUserInfo',
+    method:'get'
+  })
+}

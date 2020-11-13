@@ -183,7 +183,7 @@ export default {
     moveIn: throttle(
       function(index) {
         this.currentIndex = index;
-        console.log(index);
+        // console.log(index);
       },
       50,
       { trailing: false }
